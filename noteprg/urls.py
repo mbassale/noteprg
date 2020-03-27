@@ -19,6 +19,7 @@ from django.http import HttpResponseRedirect
 
 urlpatterns = [
     path('', lambda r: HttpResponseRedirect('notes/')),
+    path('accounts/', include('django.contrib.auth.urls')),
     path('lorem/', include('lorem.urls')),
     path('notes/', include('notes.urls')),
     path('admin/', admin.site.urls),
