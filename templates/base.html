@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <title>{% block title %}NotePrg{% endblock %}</title>
+
+    {# Load the tag library #}
+    {% load bootstrap4 %}
+    {# Load CSS and JavaScript #}
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery='full' %}
+
+    <style>
+        body {
+            padding-top: 5rem;
+        }
+        .starter-template {
+            padding: 3rem 1.5rem;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#">NotePrg</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+            {% with request.resolver_match.view_name as view_name  %}
+                <li class="nav-item {% if view_name == 'notes:index' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'notes:index' %}">Notes <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item {% if view_name == 'lorem:index' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'lorem:index' %}">Lorem</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Login</a>
+                </li>
+                {% comment %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true"
+                       aria-expanded="false">Dropdown</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown01">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </li>
+                {% endcomment %}
+            {% endwith %}
+        </ul>
+        {% comment %}
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+            <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        {% endcomment %}
+    </div>
+</nav>
+<main role="main" class="container">
+    {% bootstrap_messages %}
+    {% block content %}{% endblock %}
+</main><!-- /.container -->
+</body>
+</html>
