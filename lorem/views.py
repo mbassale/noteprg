@@ -15,9 +15,9 @@ def index(request):
             sentence_count = form.cleaned_data['sentence_count'] or 0
             paragraph_count = form.cleaned_data['paragraph_count'] or 0
             if paragraph_count > 0:
-                lorem_text = get_text(paragraph_count)
-            if sentence_count > 0:
-                lorem_text = get_paragraph(sentence_count)
+                lorem_text = get_text(paragraph_count, sentence_count, word_count)
+            elif sentence_count > 0:
+                lorem_text = get_paragraph(sentence_count, word_count)
             elif word_count > 0:
                 lorem_text = get_sentence(word_count)
     else:
