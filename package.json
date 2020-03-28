@@ -1,0 +1,33 @@
+{
+  "name": "noteprg",
+  "version": "1.0.0",
+  "description": "Note Storage Application",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npm run development",
+    "development": "./node_modules/.bin/webpack --mode=development --config webpack.config.js",
+    "prod": "npm run prod",
+    "production": "./node_modules/.bin/webpack --mode=development --config webpack.config.js",
+    "watch": "npm run start -- --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mbassale/noteprg.git"
+  },
+  "author": "Marco Bassaletti <bassaletti@gmail.com>",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/mbassale/noteprg/issues"
+  },
+  "homepage": "https://github.com/mbassale/noteprg#readme",
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "@babel/preset-react": "^7.9.4",
+    "babel-loader": "^8.1.0",
+    "webpack": "^4.42.1",
+    "webpack-bundle-tracker": "^0.4.3",
+    "webpack-cli": "^3.3.11"
+  }
+}

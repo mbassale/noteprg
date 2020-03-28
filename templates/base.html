@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="style.css">
     <title>{% block title %}NotePrg{% endblock %}</title>
 
     {# Load the tag library #}
     {% load bootstrap4 %}
+    {# Load webpack library #}
+    {% load render_bundle from webpack_loader %}
+
     {# Load CSS and JavaScript #}
     {% bootstrap_css %}
     {% bootstrap_javascript jquery='full' %}
+
+    {# Load app bundle #}
+    {% render_bundle 'main' %}
 
     <style>
         body {
