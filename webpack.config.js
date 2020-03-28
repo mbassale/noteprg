@@ -14,4 +14,15 @@ module.exports = {
             filename: 'webpack-stats.json'
         }),
     ],
-}
+    module: {
+        rules: [
+            {
+                test: /\.(js|jsx)$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: "babel-loader"
+                }
+            }
+        ]
+    }
+};

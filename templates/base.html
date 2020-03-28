@@ -1,19 +1,14 @@
+{# Load the tag library #}
+{% load bootstrap4 %}
+{# Load webpack library #}
+{% load render_bundle from webpack_loader %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <title>{% block title %}NotePrg{% endblock %}</title>
 
-    {# Load the tag library #}
-    {% load bootstrap4 %}
-    {# Load webpack library #}
-    {% load render_bundle from webpack_loader %}
-
-    {# Load CSS and JavaScript #}
+    {# Load Bootstrap CSS #}
     {% bootstrap_css %}
-    {% bootstrap_javascript jquery='full' %}
-
-    {# Load app bundle #}
-    {% render_bundle 'main' %}
 
     <style>
         body {
@@ -82,5 +77,10 @@
     {% bootstrap_messages %}
     {% block content %}{% endblock %}
 </main><!-- /.container -->
+
+{# Load Boostrap JS #}
+{% bootstrap_javascript jquery='full' %}
+{# Load app bundle #}
+{% render_bundle 'main' %}
 </body>
 </html>

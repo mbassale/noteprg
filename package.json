@@ -8,7 +8,7 @@
     "development": "./node_modules/.bin/webpack --mode=development --config webpack.config.js",
     "prod": "npm run prod",
     "production": "./node_modules/.bin/webpack --mode=development --config webpack.config.js",
-    "watch": "npm run start -- --watch",
+    "watch": "npm run development -- --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -29,5 +29,9 @@
     "webpack": "^4.42.1",
     "webpack-bundle-tracker": "^0.4.3",
     "webpack-cli": "^3.3.11"
+  },
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   }
 }
