@@ -1,3 +1,4 @@
+import '../scss/app.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import NoteApp from './components/NoteApp';
