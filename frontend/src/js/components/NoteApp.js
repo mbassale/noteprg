@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import {Col, Row} from 'react-bootstrap';
 import NoteList from './note/NoteList';
 import NoteEditor from './note/NoteEditor';
+import styles from './NoteApp.css';
 
 class NoteApp extends Component {
     constructor(props) {
@@ -21,6 +22,16 @@ class NoteApp extends Component {
             });
         });
     }
+
+    onNewNote = () => {
+        const newId = this.state.notes.reduce((max, note) => note.id > max ? note.id : max, 0) + 1;
+        this.setState({
+            notes: [
+                { id: newId, name: 'New Note', content: '' },
+                ...this.state.notes
+            ]
+        });
+    };
 
     onNoteSelected = (note) => {
         this.setState({
@@ -51,7 +62,10 @@ class NoteApp extends Component {
         return (
             <Row>
                 <Col>
-                    <h1>Note App</h1>
+                    <div className="d-flex justify-content-between">
+                        <h1>Note App</h1>
+                        <button className={['btn', 'btn-primary', styles.ToolBtn].join(' ')} onClick={this.onNewNote}>New Note</button>
+                    </div>
                     <Row>
                         <Col md={4} xl={3}>
                             <NoteList notes={this.state.notes} onNoteSelected={this.onNoteSelected} />
