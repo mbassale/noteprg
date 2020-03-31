@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, {Component} from 'react';
 import {Col, Row} from 'react-bootstrap';
 import NoteList from './note/NoteList';
@@ -8,13 +9,17 @@ class NoteApp extends Component {
         super(props);
 
         this.state = {
-            notes: [
-                { id: 1, name: 'Note 1', content: 'Labore neque sit adipisci quisquam eius magnam non aliquam dolore ut consectetur non ipsum consectetur consectetur. Eius quaerat modi consectetur dolorem sed quiquia aliquam sit est dolorem labore adipisci dolor ut dolore adipisci ipsum non. Labore dolore voluptatem dolor.'},
-                { id: 2, name: 'Note 2', content: 'Labore neque sit adipisci quisquam eius magnam non aliquam dolore ut consectetur non ipsum consectetur consectetur. Eius quaerat modi consectetur dolorem sed quiquia aliquam sit est dolorem labore adipisci dolor ut dolore adipisci ipsum non. Labore dolore voluptatem dolor.'},
-                { id: 3, name: 'Note 3', content: 'Labore neque sit adipisci quisquam eius magnam non aliquam dolore ut consectetur non ipsum consectetur consectetur. Eius quaerat modi consectetur dolorem sed quiquia aliquam sit est dolorem labore adipisci dolor ut dolore adipisci ipsum non. Labore dolore voluptatem dolor.'}
-            ],
+            notes: [],
             selectedNoteId: null
         };
+    }
+
+    componentDidMount() {
+        axios.get('/notes').then(response => {
+            this.setState({
+                notes: response.data || []
+            });
+        });
     }
 
     onNoteSelected = (note) => {
