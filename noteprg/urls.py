@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.static import static
 from django.http import HttpResponseRedirect
+
+from . import settings
 
 urlpatterns = [
     path('', lambda r: HttpResponseRedirect('notes/')),
@@ -23,4 +26,4 @@ urlpatterns = [
     path('lorem/', include('lorem.urls')),
     path('notes/', include('notes.urls')),
     path('admin/', admin.site.urls),
-]
+] + static(settings.STATIC_URL, document_root=settings.FRONTEND_DIR)

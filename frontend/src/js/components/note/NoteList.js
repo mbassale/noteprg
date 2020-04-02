@@ -15,7 +15,9 @@ class NoteList extends Component {
 
         const noteComponents = this.props.notes.map(note => {
             return (
-                <ListGroup.Item key={note.id} action onClick={() => this.noteClicked(note)}>{note.name}</ListGroup.Item>
+                <ListGroup.Item as="div" key={note.id} action onClick={() => this.noteClicked(note)}>
+                    {note.name} <button className="btn btn-light btn-sm"><i className="fa fa-edit" /></button>
+                </ListGroup.Item>
             );
         });
 

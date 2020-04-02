@@ -1,6 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 var BundleTracker = require('webpack-bundle-tracker');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     entry: path.join(__dirname, 'frontend/src/js/index'),
@@ -13,6 +14,9 @@ module.exports = {
             path: __dirname,
             filename: 'webpack-stats.json'
         }),
+        new CopyPlugin([
+            { from: './node_modules/@fortawesome/fontawesome-free/webfonts', to: '../webfonts' }
+        ]),
     ],
     module: {
         rules: [
