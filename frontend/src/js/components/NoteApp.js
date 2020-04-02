@@ -1,9 +1,12 @@
+import _ from 'lodash';
 import axios from 'axios';
 import React, {Component} from 'react';
 import {Col, Row} from 'react-bootstrap';
 import NoteList from './note/NoteList';
 import NoteEditor from './note/NoteEditor';
 import styles from './NoteApp.css';
+
+const NEW_NOTE_PREFIX = 'New Note';
 
 class NoteApp extends Component {
     constructor(props) {
@@ -13,6 +16,22 @@ class NoteApp extends Component {
             notes: [],
             selectedNoteId: null
         };
+    }
+
+    generateNewNoteName() {
+        const noteNumbers = this.state.notes.map(note => {
+            const matches = /New Note\s?(\d*)/.exec(note.name);
+            if (matches && matches.length > 1) {
+                if (matches[1]) {
+                    return parseInt(matches[1]);
+                }
+            }
+            return null;
+        }).filter(n => n > 0);
+        if (noteNumbers.length > 0) {
+            return NEW_NOTE_PREFIX + ' ' + (_.max(noteNumbers) + 1);
+        }
+        return NEW_NOTE_PREFIX + ' 1';
     }
 
     componentDidMount() {
@@ -27,7 +46,7 @@ class NoteApp extends Component {
         const newId = this.state.notes.reduce((max, note) => note.id > max ? note.id : max, 0) + 1;
         this.setState({
             notes: [
-                { id: newId, name: 'New Note', content: '' },
+                { id: newId, name: this.generateNewNoteName(), content: '' },
                 ...this.state.notes
             ]
         });
