@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import { ListGroup } from "react-bootstrap";
+import styles from './NoteList.css';
 
 class NoteList extends Component {
 
@@ -16,7 +17,10 @@ class NoteList extends Component {
         const noteComponents = this.props.notes.map(note => {
             return (
                 <ListGroup.Item as="div" key={note.id} action onClick={() => this.noteClicked(note)}>
-                    {note.name} <button className="btn btn-light btn-sm"><i className="fa fa-edit" /></button>
+                    <div className="d-flex justify-content-between">
+                        <span className={[styles.NoteName].join(' ')}>{note.name}</span>
+                        <button className="btn btn-light btn-sm"><i className="fa fa-trash" /></button>
+                    </div>
                 </ListGroup.Item>
             );
         });

@@ -58,12 +58,13 @@ class NoteApp extends Component {
         });
     };
 
-    onNoteChanged = (text) => {
+    onNoteChanged = (note) => {
         const selectedNoteIndex = this.state.notes.findIndex(note => note.id === this.state.selectedNoteId);
         if (selectedNoteIndex >= 0) {
             const updatedNote = {
                 ...this.state.notes[selectedNoteIndex],
-                content: text
+                name: note.name,
+                content: note.content
             };
             const newNotes = [...this.state.notes];
             newNotes.splice(selectedNoteIndex, 1, updatedNote);
@@ -76,7 +77,8 @@ class NoteApp extends Component {
     render() {
 
         const selectedNote = this.state.notes.find(note => note.id === this.state.selectedNoteId);
-        const noteEditor = selectedNote ? <NoteEditor text={selectedNote.content} onChange={this.onNoteChanged} /> : null;
+        const noteEditor = selectedNote ?
+            <NoteEditor note={selectedNote} onChange={this.onNoteChanged} /> : null;
 
         return (
             <Row>
