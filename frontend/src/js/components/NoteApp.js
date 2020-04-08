@@ -59,7 +59,8 @@ class NoteApp extends Component {
             notes: [
                 newNote,
                 ...this.state.notes
-            ]
+            ],
+            selectedNoteId: newId
         });
         axios.post('/notes/', newNote).finally(() => this.setState({ isProcessing: false }));
     };
