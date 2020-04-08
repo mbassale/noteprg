@@ -4,6 +4,7 @@ import React, {Component} from 'react';
 import {Col, Row} from 'react-bootstrap';
 import NoteList from './note/NoteList';
 import NoteEditor from './note/NoteEditor';
+import ConfirmModal from './common/ConfirmModal';
 import styles from './NoteApp.css';
 
 const NEW_NOTE_PREFIX = 'New Note';
@@ -15,7 +16,9 @@ class NoteApp extends Component {
         this.state = {
             isProcessing: false,
             notes: [],
-            selectedNoteId: null
+            selectedNoteId: null,
+            showDeleteConfirm: false,
+            deletingNote: null
         };
     }
 
@@ -36,7 +39,7 @@ class NoteApp extends Component {
     }
 
     loadNotes() {
-        axios.get('/notes').then(response => {
+        return axios.get('/notes').then(response => {
             this.setState({
                 notes: response.data || []
             });
@@ -44,7 +47,8 @@ class NoteApp extends Component {
     }
 
     componentDidMount() {
-        this.loadNotes();
+        this.setState({ isProcessing: true });
+        this.loadNotes().finally(() => this.setState({ isProcessing: false }));
     }
 
     onNewNote = () => {
@@ -67,7 +71,28 @@ class NoteApp extends Component {
     };
 
     onNoteDelete = (note) => {
-        axios.delete('/notes/' + note.id).finally(() => this.loadNotes());
+        this.setState({
+            showDeleteConfirm: true,
+            deletingNote: note
+        });
+    };
+
+    onConfirmDelete = () => {
+        this.setState({ isProcessing: true });
+        axios.delete('/notes/' + this.state.deletingNote.id).finally(() => {
+            this.setState({
+                showDeleteConfirm: null,
+                deletingNote: null
+            });
+            this.loadNotes().finally(() => this.setState({ isProcessing: false }));
+        });
+    };
+
+    onCancelDelete = () => {
+        this.setState({
+            showDeleteConfirm: false,
+            deletingNote: null
+        });
     };
 
     onNoteChanged = (note) => {
@@ -93,6 +118,12 @@ class NoteApp extends Component {
             <NoteEditor note={selectedNote} onChange={this.onNoteChanged} /> : null;
         const spinner = this.state.isProcessing ? <i className="fa fa-spinner fa-spin" /> : null;
 
+        const confirmDeleteModal = <ConfirmModal title="Confirm Deletion" message="Are you sure to delete this note?"
+                                                 yesTitle="Delete" noTitle="Cancel"
+                                                 show={this.state.showDeleteConfirm}
+                                                 onConfirm={this.onConfirmDelete}
+                                                 onCancel={this.onCancelDelete} />;
+
         return (
             <Row>
                 <Col>
@@ -108,6 +139,7 @@ class NoteApp extends Component {
                         </Col>
                         <Col md={8} xl={9}>{noteEditor}</Col>
                     </Row>
+                    {confirmDeleteModal}
                 </Col>
             </Row>
         );
