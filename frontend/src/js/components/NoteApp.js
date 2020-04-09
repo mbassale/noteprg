@@ -36,6 +36,7 @@ class NoteApp extends Component {
 
         this.state = {
             isProcessing: false,
+            isSaved: false,
             showDeleteConfirm: false,
             deletingNote: null
         };
@@ -100,14 +101,15 @@ class NoteApp extends Component {
     onNoteChanged = (note) => {
         const selectedNoteIndex = this.props.notes.findIndex(note => note.id === this.props.selectedNoteId);
         if (selectedNoteIndex >= 0) {
-            this.setState({ isProcessing: true });
             const updatedNote = {
                 ...this.props.notes[selectedNoteIndex],
                 name: note.name,
                 content: note.content
             };
-            console.log('UpdatedNote:', updatedNote);
-            this.props.updateNote(updatedNote).finally(() => this.setState({ isProcessing: false }));
+            this.props.updateNote(updatedNote).finally(() => {
+                this.setState({ isSaved: true });
+                setTimeout(() => this.setState({ isSaved: false }), 1000);
+            });
         }
     };
 
@@ -117,7 +119,8 @@ class NoteApp extends Component {
         const noteEditor = selectedNote ?
             <NoteEditor note={selectedNote} onChange={this.onNoteChanged} /> : null;
         const spinner = this.state.isProcessing ? <i className="fa fa-spinner fa-spin" /> : null;
-
+        const savedIndicator = this.state.isSaved ?
+            <p className="form-control-static mr-2 text-muted"><i className="fa fa-save fa-lg mt-3" /> Saving&hellip;</p> : null;
         const confirmDeleteModal = <ConfirmModal title="Confirm Deletion" message="Are you sure to delete this note?"
                                                  yesTitle="Delete" noTitle="Cancel"
                                                  show={this.state.showDeleteConfirm}
@@ -129,7 +132,10 @@ class NoteApp extends Component {
                 <Col>
                     <div className="d-flex justify-content-between">
                         <h1>Note App {spinner}</h1>
-                        <button className={['btn', 'btn-primary', styles.ToolBtn].join(' ')} onClick={this.onNewNote}>New Note</button>
+                        <div className="d-flex justify-content-end">
+                            {savedIndicator}
+                            <button className={['btn', 'btn-primary', styles.ToolBtn].join(' ')} onClick={this.onNewNote}>New Note</button>
+                        </div>
                     </div>
                     <Row>
                         <Col md={4} xl={3}>
