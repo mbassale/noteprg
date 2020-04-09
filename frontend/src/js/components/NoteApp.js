@@ -1,7 +1,9 @@
 import _ from 'lodash';
 import axios from 'axios';
 import React, {Component} from 'react';
-import {Col, Row} from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { loadNotes, addNote, selectNote, deleteNote } from '../actions';
+import { Col, Row } from 'react-bootstrap';
 import NoteList from './note/NoteList';
 import NoteEditor from './note/NoteEditor';
 import ConfirmModal from './common/ConfirmModal';
@@ -9,21 +11,37 @@ import styles from './NoteApp.css';
 
 const NEW_NOTE_PREFIX = 'New Note';
 
+const mapStateToProps = state => {
+    return {
+        isLoading: state.isLoading,
+        user: state.user,
+        notes: state.notes,
+        selectedNoteId: state.selectedNoteId
+    };
+};
+
+function mapDispatchToProps(dispatch) {
+    return {
+        loadNotes: () => dispatch(loadNotes()),
+        addNote: note => dispatch(addNote(note)),
+        selectNote: note => dispatch(selectNote(note)),
+        deleteNote: note => dispatch(deleteNote(note))
+    };
+}
+
 class NoteApp extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             isProcessing: false,
-            notes: [],
-            selectedNoteId: null,
             showDeleteConfirm: false,
             deletingNote: null
         };
     }
 
     generateNewNoteName() {
-        const noteNumbers = this.state.notes.map(note => {
+        const noteNumbers = this.props.notes.map(note => {
             const matches = /New Note\s?(\d*)/.exec(note.name);
             if (matches && matches.length > 1) {
                 if (matches[1]) {
@@ -38,37 +56,19 @@ class NoteApp extends Component {
         return NEW_NOTE_PREFIX + ' 1';
     }
 
-    loadNotes() {
-        return axios.get('/notes').then(response => {
-            this.setState({
-                notes: response.data || []
-            });
-        });
-    }
-
     componentDidMount() {
         this.setState({ isProcessing: true });
-        this.loadNotes().finally(() => this.setState({ isProcessing: false }));
+        this.props.loadNotes().finally(() => this.setState({ isProcessing: false }));
     }
 
     onNewNote = () => {
-        const newId = this.state.notes.reduce((max, note) => note.id > max ? note.id : max, 0) + 1;
+        const newId = this.props.notes.reduce((max, note) => note.id > max ? note.id : max, 0) + 1;
         const newNote = { id: newId, name: this.generateNewNoteName(), content: '' };
-        this.setState({
-            isProcessing: true,
-            notes: [
-                newNote,
-                ...this.state.notes
-            ],
-            selectedNoteId: newId
-        });
-        axios.post('/notes/', newNote).finally(() => this.setState({ isProcessing: false }));
+        this.props.addNote(newNote).finally(() => this.setState({ isProcessing: false }));
     };
 
     onNoteSelected = (note) => {
-        this.setState({
-            selectedNoteId: note.id
-        });
+        this.props.selectNote(note);
     };
 
     onNoteDelete = (note) => {
@@ -80,12 +80,12 @@ class NoteApp extends Component {
 
     onConfirmDelete = () => {
         this.setState({ isProcessing: true });
-        axios.delete('/notes/' + this.state.deletingNote.id).finally(() => {
+        this.props.deleteNote(this.state.deletingNote).finally(() => {
             this.setState({
                 showDeleteConfirm: null,
                 deletingNote: null
             });
-            this.loadNotes().finally(() => this.setState({ isProcessing: false }));
+            this.props.loadNotes().finally(() => this.setState({ isProcessing: false }));
         });
     };
 
@@ -114,7 +114,7 @@ class NoteApp extends Component {
 
     render() {
 
-        const selectedNote = this.state.notes.find(note => note.id === this.state.selectedNoteId);
+        const selectedNote = this.props.notes.find(note => note.id === this.props.selectedNoteId);
         const noteEditor = selectedNote ?
             <NoteEditor note={selectedNote} onChange={this.onNoteChanged} /> : null;
         const spinner = this.state.isProcessing ? <i className="fa fa-spinner fa-spin" /> : null;
@@ -134,7 +134,7 @@ class NoteApp extends Component {
                     </div>
                     <Row>
                         <Col md={4} xl={3}>
-                            <NoteList notes={this.state.notes}
+                            <NoteList notes={this.props.notes}
                                       onNoteSelected={this.onNoteSelected}
                                       onNoteDelete={this.onNoteDelete} />
                         </Col>
@@ -147,4 +147,4 @@ class NoteApp extends Component {
     }
 }
 
-export default NoteApp;
+export default connect(mapStateToProps, mapDispatchToProps)(NoteApp);
