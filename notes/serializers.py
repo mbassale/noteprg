@@ -13,7 +13,7 @@ class NoteSerializer(serializers.ModelSerializer):
         return Note.objects.create(user=user, **validated_data)
 
     def update(self, instance, validated_data):
-        instance.name = validated_data.get('name', instance.email)
+        instance.name = validated_data.get('name', instance.name)
         instance.content = validated_data.get('content', instance.content)
         instance.save()
         return instance

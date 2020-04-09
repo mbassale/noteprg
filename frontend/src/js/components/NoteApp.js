@@ -2,7 +2,7 @@ import _ from 'lodash';
 import axios from 'axios';
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { loadNotes, addNote, selectNote, deleteNote } from '../actions';
+import { loadNotes, addNote, selectNote, deleteNote, updateNote } from '../actions';
 import { Col, Row } from 'react-bootstrap';
 import NoteList from './note/NoteList';
 import NoteEditor from './note/NoteEditor';
@@ -23,8 +23,9 @@ const mapStateToProps = state => {
 function mapDispatchToProps(dispatch) {
     return {
         loadNotes: () => dispatch(loadNotes()),
-        addNote: note => dispatch(addNote(note)),
         selectNote: note => dispatch(selectNote(note)),
+        addNote: note => dispatch(addNote(note)),
+        updateNote: note => dispatch(updateNote(note)),
         deleteNote: note => dispatch(deleteNote(note))
     };
 }
@@ -97,18 +98,16 @@ class NoteApp extends Component {
     };
 
     onNoteChanged = (note) => {
-        const selectedNoteIndex = this.state.notes.findIndex(note => note.id === this.state.selectedNoteId);
+        const selectedNoteIndex = this.props.notes.findIndex(note => note.id === this.props.selectedNoteId);
         if (selectedNoteIndex >= 0) {
+            this.setState({ isProcessing: true });
             const updatedNote = {
-                ...this.state.notes[selectedNoteIndex],
+                ...this.props.notes[selectedNoteIndex],
                 name: note.name,
                 content: note.content
             };
-            const newNotes = [...this.state.notes];
-            newNotes.splice(selectedNoteIndex, 1, updatedNote);
-            this.setState({
-                notes: newNotes
-            });
+            console.log('UpdatedNote:', updatedNote);
+            this.props.updateNote(updatedNote).finally(() => this.setState({ isProcessing: false }));
         }
     };
 

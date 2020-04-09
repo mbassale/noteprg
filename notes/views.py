@@ -26,6 +26,12 @@ def detail(request, pk):
     except Note.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
+    if request.method == 'PUT':
+        stream = io.BytesIO(request.body)
+        data = JSONParser().parse(stream)
+        updated_note = NoteSerializer().update(note, data)
+        return JsonResponse(NoteSerializer(updated_note).data, safe=False)
+
     if request.method == 'DELETE':
         note.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)

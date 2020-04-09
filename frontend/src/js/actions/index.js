@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { LOAD_NOTES, ADD_NOTE, SELECT_NOTE, DELETE_NOTE } from '../constants/action-types';
+import { debounce } from 'lodash';
+import {LOAD_NOTES, ADD_NOTE, SELECT_NOTE, DELETE_NOTE, UPDATE_NOTE} from '../constants/action-types';
 
 export function loadNotes() {
     return function(dispatch) {
@@ -14,6 +15,20 @@ export function addNote(payload) {
         return axios.post('/notes/', payload).then(response => {
             dispatch({ type: ADD_NOTE, payload: response.data });
         });
+    };
+}
+
+export const debouncedUpdateNote = debounce((resolve, reject, payload, dispatch) => {
+    return axios.put('/notes/' + payload.id + '/', payload).then(response => {
+        dispatch({ type: UPDATE_NOTE, payload: response.data });
+        resolve(response);
+    }).catch(error => reject(error));
+}, 1000);
+
+export function updateNote(payload) {
+    return function(dispatch) {
+        dispatch({ type: UPDATE_NOTE, payload });
+        return new Promise((resolve, reject) => debouncedUpdateNote(resolve, reject, payload, dispatch));
     };
 }
 
