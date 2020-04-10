@@ -1,12 +1,14 @@
 import io
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from notes.models import Note
 from .serializers import NoteSerializer
 from rest_framework.parsers import JSONParser
 from rest_framework import status
 
 
+@login_required
 def index(request):
     if request.is_ajax():
         if request.method == 'POST':
@@ -20,6 +22,7 @@ def index(request):
     return render(request, 'notes/index.html', {})
 
 
+@login_required
 def detail(request, pk):
     try:
         note = Note.objects.get(pk=pk)
