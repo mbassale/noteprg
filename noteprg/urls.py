@@ -25,5 +25,6 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('lorem/', include('lorem.urls')),
     path('notes/', include('notes.urls')),
+    path('color/', include('colorhelper.urls')),
     path('admin/', admin.site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.FRONTEND_DIR)

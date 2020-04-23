@@ -9,11 +9,19 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
 import NoteApp from './components/NoteApp';
+import ColorHelperApp from './components/ColorHelperApp';
 import store from './store/index';
 
-const wrapper = document.getElementById('NoteApp');
-wrapper ? ReactDOM.render(
+const noteApp = document.getElementById('NoteApp');
+noteApp ? ReactDOM.render(
     <Provider store={store}>
         <NoteApp />
     </Provider>,
-    wrapper) : false;
+    noteApp) : false;
+
+const colorHelperApp = document.getElementById('ColorHelperApp');
+colorHelperApp ? ReactDOM.render(
+    <Provider store={store}>
+        <ColorHelperApp />
+    </Provider>,
+    colorHelperApp) : false;
