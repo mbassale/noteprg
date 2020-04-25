@@ -27,4 +27,5 @@ urlpatterns = [
     path('notes/', include('notes.urls')),
     path('color/', include('colorhelper.urls')),
     path('admin/', admin.site.urls),
+    path('api/', include('api.urls'))
 ] + static(settings.STATIC_URL, document_root=settings.FRONTEND_DIR)
