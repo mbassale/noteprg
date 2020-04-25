@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {ADD_NOTE, LOAD_NOTES, SELECT_NOTE, DELETE_NOTE, UPDATE_NOTE} from '../constants/action-types';
+import {ADD_NOTE, LOAD_NOTES, SELECT_NOTE, DELETE_NOTE, UPDATE_NOTE, LOAD_USER} from '../constants/action-types';
 
 const initialState = {
     isLoading: false,
@@ -10,6 +10,11 @@ const initialState = {
 
 function rootReducer(state = initialState, action) {
     switch (action.type) {
+        case LOAD_USER:
+            return {
+                ...state,
+                user: action.payload
+            };
         case LOAD_NOTES:
             return {
                 ...state,

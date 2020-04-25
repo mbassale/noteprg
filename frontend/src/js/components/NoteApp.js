@@ -1,8 +1,7 @@
 import _ from 'lodash';
-import axios from 'axios';
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { loadNotes, addNote, selectNote, deleteNote, updateNote } from '../actions';
+import { loadCurrentUser, loadNotes, addNote, selectNote, deleteNote, updateNote } from '../actions';
 import { Col, Row } from 'react-bootstrap';
 import NoteList from './note/NoteList';
 import NoteEditor from './note/NoteEditor';
@@ -22,6 +21,7 @@ const mapStateToProps = state => {
 
 function mapDispatchToProps(dispatch) {
     return {
+        loadCurrentUser: () => dispatch(loadCurrentUser()),
         loadNotes: () => dispatch(loadNotes()),
         selectNote: note => dispatch(selectNote(note)),
         addNote: note => dispatch(addNote(note)),
@@ -42,6 +42,13 @@ class NoteApp extends Component {
         };
     }
 
+    componentDidMount() {
+        this.setState({ isProcessing: true });
+        this.props.loadCurrentUser().then(() => {
+            return this.props.loadNotes().finally(() => this.setState({ isProcessing: false }));
+        });
+    }
+
     generateNewNoteName() {
         const noteNumbers = this.props.notes.map(note => {
             const matches = /New Note\s?(\d*)/.exec(note.name);
@@ -58,14 +65,9 @@ class NoteApp extends Component {
         return NEW_NOTE_PREFIX + ' 1';
     }
 
-    componentDidMount() {
-        this.setState({ isProcessing: true });
-        this.props.loadNotes().finally(() => this.setState({ isProcessing: false }));
-    }
-
     onNewNote = () => {
         const newId = this.props.notes.reduce((max, note) => note.id > max ? note.id : max, 0) + 1;
-        const newNote = { id: newId, name: this.generateNewNoteName(), content: '' };
+        const newNote = { id: newId, user: this.props.user.id, name: this.generateNewNoteName(), content: 'New Note' };
         this.props.addNote(newNote).finally(() => this.setState({ isProcessing: false }));
     };
 

@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User, Group
-from rest_framework import viewsets
-from rest_framework import permissions
+from rest_framework import viewsets, permissions
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from api.serializers import UserSerializer, GroupSerializer, NoteSerializer
 from notes.models import Note
 
@@ -30,3 +31,12 @@ class NoteViewSet(viewsets.ModelViewSet):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+@api_view(['GET'])
+def current_user(request):
+    """
+    Retrieve current logged user
+    """
+    serializer = UserSerializer(request.user)
+    return Response(serializer.data)
